@@ -355,13 +355,13 @@
 <section id="animations" class="max-w-6xl mx-auto px-5 md:px-8 py-16 md:py-20">
   <div class="flex items-baseline justify-between gap-4 flex-wrap mb-10">
     <h2 class="font-display font-semibold text-2xl md:text-3xl" style="color:var(--ink)">Recent work</h2>
-    <span class="tag">6 CLIPS LOADED</span>
+    <span class="tag"> CLIPS LOADED</span>
   </div>
 
-  <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+  <div id="animationsGrid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
 
   <!-- Card 2 — GIF (local file) + link to full video on Drive -->
-  <article class="frame-card rounded-lg overflow-hidden">
+  <article class="frame-card rounded-lg overflow-hidden animation-item">
     <div class="cel">
       <div class="hole" style="left:8px;"></div>
       <div class="hole" style="right:8px;"></div>
@@ -377,8 +377,8 @@
         class="text-xs underline" style="color:var(--teal)">Watch full video on Drive →</a>
     </div>
   </article>
-  
-  <article class="frame-card rounded-lg overflow-hidden">
+
+  <article class="frame-card rounded-lg overflow-hidden animation-item">
     <div class="cel">
       <div class="hole" style="left:8px;"></div>
       <div class="hole" style="right:8px;"></div>
@@ -395,7 +395,7 @@
     </div>
   </article>
 
-  <article class="frame-card rounded-lg overflow-hidden">
+  <article class="frame-card rounded-lg overflow-hidden animation-item">
     <div class="cel">
       <div class="hole" style="left:8px;"></div>
       <div class="hole" style="right:8px;"></div>
@@ -413,7 +413,102 @@
   </article>
 
   </div>
+
+  <!-- Pagination -->
+  <div id="animPagination" class="flex items-center justify-center gap-2 mt-8">
+  </div>
 </section>
+
+
+<script>
+  // ================= ANIMATIONS PAGINATION =================
+
+  const animationsPerPage = 6;
+  let currentAnimPage = 1;
+
+  const animations = document.querySelectorAll(".animation-item");
+  const totalAnimPages = Math.ceil(animations.length / animationsPerPage);
+
+  function showAnimPage(page) {
+    currentAnimPage = page;
+
+    const start = (page - 1) * animationsPerPage;
+    const end = start + animationsPerPage;
+
+    animations.forEach((animation, index) => {
+      if (index >= start && index < end) {
+        animation.classList.remove("hidden");
+      } else {
+        animation.classList.add("hidden");
+      }
+    });
+
+    createAnimPagination();
+  }
+
+  function createAnimPagination() {
+    const pagination = document.getElementById("animPagination");
+
+    pagination.innerHTML = "";
+
+    // Previous button
+    const prev = document.createElement("button");
+
+    prev.innerHTML = "←";
+    prev.className = "px-4 py-2 rounded-lg border transition disabled:opacity-40 disabled:cursor-not-allowed";
+    prev.style.cssText = "border-color:var(--line); background:var(--panel); color:var(--ink);";
+
+    prev.disabled = currentAnimPage === 1;
+
+    prev.onclick = () => {
+      if (currentAnimPage > 1) {
+        showAnimPage(currentAnimPage - 1);
+      }
+    };
+
+    pagination.appendChild(prev);
+
+    // Page numbers
+    for (let i = 1; i <= totalAnimPages; i++) {
+
+      const button = document.createElement("button");
+
+      button.textContent = i;
+
+      button.className = "px-4 py-2 rounded-lg border transition";
+
+      if (i === currentAnimPage) {
+        button.style.cssText = "background:var(--accent); color:var(--accent-ink); border-color:var(--accent);";
+      } else {
+        button.style.cssText = "background:var(--panel); color:var(--ink); border-color:var(--line);";
+      }
+
+      button.onclick = () => showAnimPage(i);
+
+      pagination.appendChild(button);
+    }
+
+    // Next button
+    const next = document.createElement("button");
+
+    next.innerHTML = "→";
+    next.className = "px-4 py-2 rounded-lg border transition disabled:opacity-40 disabled:cursor-not-allowed";
+    next.style.cssText = "border-color:var(--line); background:var(--panel); color:var(--ink);";
+
+    next.disabled = currentAnimPage === totalAnimPages;
+
+    next.onclick = () => {
+      if (currentAnimPage < totalAnimPages) {
+        showAnimPage(currentAnimPage + 1);
+      }
+    };
+
+    pagination.appendChild(next);
+  }
+
+  // Show first page
+  showAnimPage(1);
+</script>
 
 
 <!-- ============ DESIGN WORKS ============ -->
